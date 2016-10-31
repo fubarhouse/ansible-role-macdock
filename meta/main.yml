@@ -1,0 +1,22 @@
+galaxy_info:
+  author: Karl Hepworth
+  description: Installs and uses dockutil to remove, add and rearrange dock items
+  # issue_tracker_url: http://example.com/issue/tracker
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+  - name: MacOSX
+    versions:
+    - all
+    - 10.10
+    - 10.11
+    - 10.12
+    - 10.7
+    - 10.8
+    - 10.9
+  galaxy_tags:
+    - mac
+    - apple
+    - dock
+    - dockutil
+dependencies: []
