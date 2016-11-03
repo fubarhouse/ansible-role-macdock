@@ -1,5 +1,8 @@
 ---
+
 - hosts: localhost
-  remote_user: root
+  vars:
+    dockitems_enabled: []
   roles:
+    - geerlingguy.homebrew
     - fubarhouse.macdock

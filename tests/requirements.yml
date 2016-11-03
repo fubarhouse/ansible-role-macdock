@@ -1,0 +1,8 @@
+---
+
+ - src: https://github.com/geerlingguy/ansible-role-homebrew
+   version: 2.1.0
+   name: geerlingguy.homebrew
+ - src: https://github.com/fubarhouse/ansible-role-macdock
+   version: master
+   name: fubarhouse.macdock
