@@ -32,6 +32,13 @@ dockitems_disabled:
   - Terminal
 ````
 
+Or, if you want to remove all dock items, use:
+
+```
+dockitems_disabled:
+  - all
+```
+
 Dock items to add, including name, path and weight/position:
 
 ````
