@@ -26,17 +26,11 @@
   failed_when: false
 
 - name: Dockutil | Adding items
-  shell: dockutil --add "{{ item.path }}"
-  when: '"{{ item.name }} was not found" in dockutil_newdata.results'
-  with_items: "{{ dockitems_enabled }}"
+  shell: dockutil --add "{{ item.item.path }}"
+  when: '"{{ item.item.name }} was not found" in item.stdout'
+  with_items: "{{ dockutil_newdata.results }}"
 
 - name: Dockutil | Moving items
-  shell: dockutil --move "{{ item.name }}" --position "{{ item.pos }}"
-  with_items: "{{ dockitems_enabled }}"
-  when: '"{{ item.name }} was found in persistent-apps at slot {{ item.pos }} in" not in dockutil_newdata.results'
-
-- name: Debug!
-  debug:
-    msg: '"{{ item.name }} was found in persistent-apps at slot {{ item.pos }} in" not in dockutil_newdata.results'
-  with_items: "{{ dockitems_enabled }}"
-  when: item.name == "TeamViewer"
+  shell: dockutil --move "{{ item.item.name }}" --position "{{ item.item.pos }}"
+  with_items: "{{ dockutil_newdata.results }}"
+  when: '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
