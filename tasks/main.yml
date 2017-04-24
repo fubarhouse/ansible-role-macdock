@@ -13,10 +13,10 @@
   failed_when: false
 
 - name: Dockutil | Remove all unwanted dock items
-  shell: dockutil --remove "{{ item }}"
-  when: '"{{ item }} was found in persistent-apps at slot" in dockutil_removeditems.results'
+  shell: dockutil --remove "{{ item.item }}"
+  when: '"{{ item.item }} was found in persistent-apps" in item.stdout'
   with_items:
-    - "{{ dockitems_disabled }}"
+    - "{{ dockutil_removeditems.results }}"
 
 - name: Dockutil | Get information on configured setup
   shell: dockutil --find "{{ item.name }}"
