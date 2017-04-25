@@ -6,6 +6,8 @@
 # To manage dock items.
 #
 
+dockitems_remove_all: false
+
 dockitems_disabled:
   - Launchpad
   - Mail
