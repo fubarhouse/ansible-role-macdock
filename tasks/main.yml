@@ -25,9 +25,9 @@
   failed_when: false
 
 - name: Dockutil | Adding items
-  when: '"{{ item.item.name }} was not found" in item.stdout'
   shell: "dockutil --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
   with_items: "{{ dockutil_newdata.results }}"
+  when: '"{{ item.item.name }} was not found in" in item.stdout'
 
 - name: Dockutil | Get information on current setup
   shell: "dockutil --find '{{ item.name }}'"
@@ -41,3 +41,4 @@
   with_items: "{{ dockutil_currdata.results }}"
   when:
   - '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
+  - '"{{ item.item.name }} was not found" not in item.stdout'
