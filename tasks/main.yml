@@ -30,7 +30,15 @@
   when: '"{{ item.item.name }} was not found" in item.stdout'
   with_items: "{{ dockutil_newdata.results }}"
 
+- name: Dockutil | Get information on current setup
+  shell: "dockutil --find '{{ item.name }}'"
+  register: dockutil_currdata
+  with_items: "{{ dockitems_enabled }}"
+  changed_when: false
+  failed_when: false
+
 - name: Dockutil | Moving items
   shell: dockutil --move "{{ item.item.name }}" --position "{{ item.item.pos }}"
   with_items: "{{ dockutil_newdata.results }}"
-  when: '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
+  when:
+  - '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
