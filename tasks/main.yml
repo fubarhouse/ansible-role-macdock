@@ -3,7 +3,7 @@
 - name: Dockutil | Ensure installed.
   homebrew:
     name: "dockutil"
-    state: present
+    state: installed
 
 - name: Dockutil | Get information on items to remove
   shell: dockutil --find "{{ item }}"
