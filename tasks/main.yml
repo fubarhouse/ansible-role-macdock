@@ -14,9 +14,8 @@
 
 - name: Dockutil | Remove all unwanted dock items
   shell: "dockutil --remove '{{ item.item }}' --no-restart"
+  with_items: "{{ dockutil_removeditems.results }}"
   when: '"{{ item.item }} was found in persistent-apps" in item.stdout'
-  with_items:
-    - "{{ dockutil_removeditems.results }}"
 
 - name: Dockutil | Get information on configured setup
   shell: "dockutil --find '{{ item.name }}'"
@@ -38,7 +37,7 @@
   failed_when: false
 
 - name: Dockutil | Moving items
-  with_items: "{{ dockutil_newdata.results }}"
   shell: "dockutil --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
+  with_items: "{{ dockutil_currdata.results }}"
   when:
   - '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
