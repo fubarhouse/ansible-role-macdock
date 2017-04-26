@@ -3,20 +3,61 @@
 - name: Dockutil | Ensure installed.
   homebrew:
     name: "dockutil"
-    state: present
+    state: installed
+
+- name: Dockutil | Get information on items to remove
+  shell: "dockutil --find '{{ item }}'"
+  register: dockutil_removeditems
+  with_items: "{{ dockitems_disabled }}"
+  changed_when: false
+  failed_when: false
+  when: dockitems_remove_all|bool == false
+
+- name: Dockutil | Remove all dock items
+  shell: "dockutil --remove all --no-restart"
+  register: removed_items_task
+  when: dockitems_remove_all|bool == true
 
 - name: Dockutil | Remove all unwanted dock items
-  shell: dockutil --remove "{{ item }}"
-  ignore_errors: true
-  with_items: "{{ dockitems_disabled }}"
-  when: "{{ dockitems_disabled | length > 0 }}"
+  shell: "dockutil --remove '{{ item.item }}' --no-restart"
+  register: removed_items_task
+  with_items: "{{ dockutil_removeditems.results }}"
+  when:
+  - dockitems_remove_all|bool == false
+  - '"{{ item.item }} was found in persistent-apps" in item.stdout'
+
+- name: Dockutil | Get information on configured setup
+  shell: "dockutil --find '{{ item.name }}'"
+  register: dockutil_newdata
+  with_items: "{{ dockitems_enabled }}"
+  changed_when: false
+  failed_when: false
 
 - name: Dockutil | Adding items
-  shell: dockutil --find "{{ item.name }}" || dockutil --add "{{ item.path }}"
+  shell: "dockutil --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
+  register: added_items_task
+  with_items: "{{ dockutil_newdata.results }}"
+  when: '"{{ item.item.name }} was not found in" in item.stdout'
+
+- name: Dockutil | Get information on current setup
+  shell: "dockutil --find '{{ item.name }}'"
+  register: dockutil_currdata
   with_items: "{{ dockitems_enabled }}"
-  when: "{{ dockitems_enabled | length > 0 }}"
+  changed_when: false
+  failed_when: false
 
 - name: Dockutil | Moving items
-  shell: dockutil --move "{{ item.name }}" --position "{{ item.pos }}"
-  with_items: "{{ dockitems_enabled }}"
-  when: "{{ dockitems_enabled | length > 0 }}"
+  shell: "dockutil --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
+  register: moved_items_task
+  with_items: "{{ dockutil_currdata.results }}"
+  when:
+  - '"{{ item.item.name }} was found in persistent-apps at slot {{ item.item.pos }} in" not in item.stdout'
+  - '"{{ item.item.name }} was not found" not in item.stdout'
+
+- name: Dockutil | Restart Dock
+  shell: "/usr/bin/killall Dock"
+  changed_when: false
+  when: >
+    removed_items_task.changed|bool == true or
+    moved_items_task.changed|bool == true or
+    added_items_task.changed|bool == true

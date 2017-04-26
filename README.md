@@ -10,6 +10,8 @@ Install [Dockutil](https://github.com/kcrawford/dockutil) and remove, add and an
 
 ## Role Variables
 
+### Removal of dock items
+
 Dock items to remove:
 
 ````
@@ -32,12 +34,17 @@ dockitems_disabled:
   - Terminal
 ````
 
-Or, if you want to remove all dock items, use:
-
+#### Remove all: Preferred method
 ```
+dockitems_remove_all: true
+```
+#### Remove all: Alternative method:
+````
 dockitems_disabled:
   - all
-```
+````
+
+### Adding dock items
 
 Dock items to add, including name, path and weight/position:
 
