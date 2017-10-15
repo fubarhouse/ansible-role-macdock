@@ -22,6 +22,8 @@
 - name: Dockutil | Remove all unwanted dock items
   shell: "dockutil --remove '{{ item.item }}' --no-restart"
   with_items: "{{ dockutil_removeditems.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when:
   - dockitems_remove_all|bool == false
   - (item.item ~ " was found in persistent-apps") in item.stdout
@@ -38,6 +40,8 @@
 - name: Dockutil | Adding items
   shell: "dockutil --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
   with_items: "{{ dockutil_newdata.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when: (item.item.name ~ " was not found in") in item.stdout
   notify: restart dock
 
@@ -52,6 +56,8 @@
 - name: Dockutil | Moving items
   shell: "dockutil --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
   with_items: "{{ dockutil_currdata.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when:
   - (item.item.name ~ " was found in persistent-apps at slot " ~ item.item.pos ~ " in") not in item.stdout
   - (item.item.name ~ " was not found") not in item.stdout
