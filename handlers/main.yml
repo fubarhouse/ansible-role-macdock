@@ -1,2 +1,4 @@
 ---
 # handlers file for fubarhouse.macdock
+- name: restart dock
+  shell: "/usr/bin/killall Dock"

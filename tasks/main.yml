@@ -11,6 +11,7 @@
   with_items: "{{ dockitems_disabled }}"
   changed_when: false
   failed_when: false
+  check_mode: no
   when: dockitems_remove_all|bool == false
 
 - name: Dockutil | Remove all dock items
@@ -20,11 +21,13 @@
 
 - name: Dockutil | Remove all unwanted dock items
   shell: "dockutil --remove '{{ item.item }}' --no-restart"
-  register: removed_items_task
   with_items: "{{ dockutil_removeditems.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when:
   - dockitems_remove_all|bool == false
   - (item.item ~ " was found in persistent-apps") in item.stdout
+  notify: restart dock
 
 - name: Dockutil | Get information on configured setup
   shell: "dockutil --find '{{ item.name }}'"
@@ -32,12 +35,15 @@
   with_items: "{{ dockitems_enabled }}"
   changed_when: false
   failed_when: false
+  check_mode: no
 
 - name: Dockutil | Adding items
   shell: "dockutil --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
-  register: added_items_task
   with_items: "{{ dockutil_newdata.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when: (item.item.name ~ " was not found in") in item.stdout
+  notify: restart dock
 
 - name: Dockutil | Get information on current setup
   shell: "dockutil --find '{{ item.name }}'"
@@ -45,19 +51,14 @@
   with_items: "{{ dockitems_enabled }}"
   changed_when: false
   failed_when: false
+  check_mode: no
 
 - name: Dockutil | Moving items
   shell: "dockutil --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
-  register: moved_items_task
   with_items: "{{ dockutil_currdata.results }}"
+  loop_control:
+    label: "{{item.item}}"
   when:
   - (item.item.name ~ " was found in persistent-apps at slot " ~ item.item.pos ~ " in") not in item.stdout
   - (item.item.name ~ " was not found") not in item.stdout
-
-- name: Dockutil | Restart Dock
-  shell: "/usr/bin/killall Dock"
-  changed_when: false
-  when: >
-    removed_items_task.changed|bool == true or
-    moved_items_task.changed|bool == true or
-    added_items_task.changed|bool == true
+  notify: restart dock
