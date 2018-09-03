@@ -6,6 +6,9 @@
 # To manage dock items.
 #
 
+dockutil_url: https://raw.githubusercontent.com/kcrawford/dockutil/master/scripts/dockutil
+dockutil_install_path: /usr/local/bin/dockutil
+
 dockitems_remove_all: false
 
 dockitems_disabled:

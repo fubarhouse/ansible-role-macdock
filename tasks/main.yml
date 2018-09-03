@@ -1,9 +1,10 @@
 ---
 
 - name: Dockutil | Ensure installed.
-  homebrew:
-    name: "dockutil"
-    state: installed
+  get_url:
+    url: "{{ dockutil_url }}"
+    dest: "{{ dockutil_install_path }}"
+    mode: 0755
 
 - name: Dockutil | Get information on items to remove
   shell: "dockutil --find '{{ item }}'"
