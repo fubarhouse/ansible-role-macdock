@@ -5,8 +5,6 @@ language: objective-c
 osx_image: xcode10
 
 install:
-  # Install pip.
-  - sudo easy_install pip
 
   # Install Ansible.
   - sudo pip install ansible
