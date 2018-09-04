@@ -7,7 +7,7 @@
     mode: 0755
 
 - name: Dockutil | Get information on items to remove
-  shell: "dockutil --find '{{ item }}'"
+  shell: "{{ dockutil_install_path }} --find '{{ item }}'"
   register: dockutil_removeditems
   with_items: "{{ dockitems_disabled }}"
   changed_when: false
@@ -16,12 +16,12 @@
   when: dockitems_remove_all|bool == false
 
 - name: Dockutil | Remove all dock items
-  shell: "dockutil --remove all --no-restart"
+  shell: "{{ dockutil_install_path }} --remove all --no-restart"
   register: removed_items_task
   when: dockitems_remove_all|bool == true
 
 - name: Dockutil | Remove all unwanted dock items
-  shell: "dockutil --remove '{{ item.item }}' --no-restart"
+  shell: "{{ dockutil_install_path }} --remove '{{ item.item }}' --no-restart"
   with_items: "{{ dockutil_removeditems.results }}"
   loop_control:
     label: "{{item.item}}"
@@ -31,7 +31,7 @@
   notify: restart dock
 
 - name: Dockutil | Get information on configured setup
-  shell: "dockutil --find '{{ item.name }}'"
+  shell: "{{ dockutil_install_path }} --find '{{ item.name }}'"
   register: dockutil_newdata
   with_items: "{{ dockitems_enabled }}"
   changed_when: false
@@ -39,7 +39,7 @@
   check_mode: no
 
 - name: Dockutil | Adding items
-  shell: "dockutil --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
+  shell: "{{ dockutil_install_path }} --add '{{ item.item.path }}' --position {{ item.item.pos }} --no-restart"
   with_items: "{{ dockutil_newdata.results }}"
   loop_control:
     label: "{{item.item}}"
@@ -47,7 +47,7 @@
   notify: restart dock
 
 - name: Dockutil | Get information on current setup
-  shell: "dockutil --find '{{ item.name }}'"
+  shell: "{{ dockutil_install_path }} --find '{{ item.name }}'"
   register: dockutil_currdata
   with_items: "{{ dockitems_enabled }}"
   changed_when: false
@@ -55,7 +55,7 @@
   check_mode: no
 
 - name: Dockutil | Moving items
-  shell: "dockutil --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
+  shell: "{{ dockutil_install_path }} --move '{{ item.item.name }}' --position {{ item.item.pos }} --no-restart"
   with_items: "{{ dockutil_currdata.results }}"
   loop_control:
     label: "{{item.item}}"
