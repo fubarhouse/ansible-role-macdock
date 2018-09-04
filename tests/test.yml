@@ -4,5 +4,4 @@
   vars:
     dockitems_enabled: []
   roles:
-    - geerlingguy.homebrew
     - fubarhouse.macdock
