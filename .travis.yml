@@ -21,6 +21,9 @@ script:
   # Install roles
   - "ansible-galaxy install -r tests/requirements.yml"
 
+  # Copy this role into place
+  - cp -rf $TRAVIS_BUILD_DIR/*  ../fubarhouse.macdock/
+
   # Check the role/playbook's syntax.
   - "ansible-playbook tests/test.yml --syntax-check"
 
