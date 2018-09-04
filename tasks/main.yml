@@ -1,10 +1,16 @@
 ---
 
+- name: Dockutil | Detect installation
+  stat:
+    path: "{{ dockutil_install_path }}"
+  register: dockutil_stat
+
 - name: Dockutil | Ensure installed.
   get_url:
     url: "{{ dockutil_url }}"
     dest: "{{ dockutil_install_path }}"
     mode: 0755
+  when: not dockutil_stat.stat.exists
 
 - name: Dockutil | Get information on items to remove
   shell: "{{ dockutil_install_path }} --find '{{ item }}'"
