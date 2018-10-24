@@ -4,9 +4,9 @@
 - name: clear cache
   shell: "{{ item }}"
   with_items:
-    - 'sudo find /private/var/folders/ -name com.apple.iconservices -exec rm -rf {};'
-    - 'sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm -rf {};'
-    - 'sudo rm -rf /Library/Caches/com.apple.iconservices.store;'
+    - 'sudo find /private/var/folders/ -name com.apple.iconservices -exec rm -rf {}'
+    - 'sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm -rf {}'
+    - 'sudo rm -rf /Library/Caches/com.apple.iconservices.store'
 
 - name: restart dock
   shell: "/usr/bin/killall Dock"
