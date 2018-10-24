@@ -8,6 +8,6 @@
     - 'sudo find /private/var/folders/ -name com.apple.dock.iconcache -exec rm -rf {};'
     - 'sudo rm -rf /Library/Caches/com.apple.iconservices.store;'
 
-  - name: restart dock
-    shell: "/usr/bin/killall Dock"
-    failed_when: false
+- name: restart dock
+  shell: "/usr/bin/killall Dock"
+  failed_when: false
