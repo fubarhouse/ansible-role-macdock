@@ -3,7 +3,6 @@
 
 - name: clear cache
   become: yes
-  become_user: root
   shell: "{{ item }}"
   with_items:
     - 'find /private/var/folders/ -name com.apple.iconservices -exec rm -rf {} \; | true'
