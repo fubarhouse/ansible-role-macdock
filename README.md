@@ -4,6 +4,8 @@
 
 Install [Dockutil](https://github.com/kcrawford/dockutil) and remove, add and and rotate items on OSX's dock on macOS.
 
+During the roles execution, icon cache will also be cleared however may require a restart if there are continuing problems.
+
 ## Requirements
 
 None.

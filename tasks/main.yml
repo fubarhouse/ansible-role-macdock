@@ -34,7 +34,9 @@
   when:
   - dockitems_remove_all|bool == false
   - (item.item ~ " was found in persistent-apps") in item.stdout
-  notify: restart dock
+  notify:
+    - clear cache
+    - restart dock
 
 - name: Dockutil | Get information on configured setup
   shell: "{{ dockutil_install_path }} --find '{{ item.name }}'"
@@ -50,7 +52,9 @@
   loop_control:
     label: "{{item.item}}"
   when: (item.item.name ~ " was not found in") in item.stdout
-  notify: restart dock
+  notify:
+    - clear cache
+    - restart dock
 
 - name: Dockutil | Get information on current setup
   shell: "{{ dockutil_install_path }} --find '{{ item.name }}'"
@@ -68,4 +72,6 @@
   when:
   - (item.item.name ~ " was found in persistent-apps at slot " ~ item.item.pos ~ " in") not in item.stdout
   - (item.item.name ~ " was not found") not in item.stdout
-  notify: restart dock
+  notify:
+    - clear cache
+    - restart dock
