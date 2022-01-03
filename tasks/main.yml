@@ -25,7 +25,10 @@
   shell: "{{ dockutil_install_path }} --remove all --no-restart"
   register: removed_items_task
   when: dockitems_remove_all|bool == true
-
+  notify:
+    - clear cache
+    - restart dock
+    
 - name: Dockutil | Remove all unwanted dock items
   shell: "{{ dockutil_install_path }} --remove '{{ item.item }}' --no-restart"
   with_items: "{{ dockutil_removeditems.results }}"
